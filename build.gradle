@@ -39,12 +39,17 @@ ext {
     if (!project.hasProperty('sonatypeUsername')) sonatypeUsername = ''
     if (!project.hasProperty('sonatypePassword')) sonatypePassword = ''
 }
+<<<<<<< HEAD
 /*
+=======
+
+>>>>>>> 03153e3ada0489eef16cb6f59c1668d7ff0b5b2f
 sourceSets {
     perf.java.srcDir 'src/perftest/java'
 }
 
 eclipse.classpath.plusConfigurations += sourceSets.perf.compileClasspath
+<<<<<<< HEAD
 */
 eclipse{
 	classpath{
@@ -61,11 +66,17 @@ eclipse{
 
 tasks.eclipse.dependsOn cleanEclipse
 /*
+=======
+
+>>>>>>> 03153e3ada0489eef16cb6f59c1668d7ff0b5b2f
 idea.module {
     testSourceDirs += sourceSets.perf.allSource.getSrcDirs()
     scopes.TEST.plus += sourceSets.perf.compileClasspath
 }
+<<<<<<< HEAD
 */
+=======
+>>>>>>> 03153e3ada0489eef16cb6f59c1668d7ff0b5b2f
 
 repositories {
     mavenCentral()
@@ -75,6 +86,7 @@ dependencies {
     testCompile 'junit:junit:4.5', 
                 'org.jmock:jmock-junit4:2.5.1', 
                 'org.jmock:jmock-legacy:2.5.1'
+<<<<<<< HEAD
     /*
     perfCompile 'org.hdrhistogram:HdrHistogram:1.2.1'
     */
@@ -83,6 +95,14 @@ dependencies {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 /*
+=======
+    perfCompile 'org.hdrhistogram:HdrHistogram:1.2.1'
+}
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+>>>>>>> 03153e3ada0489eef16cb6f59c1668d7ff0b5b2f
 tasks.withType(Compile) {
     options.compilerArgs << '-XDignore.symbol.file' << '-Xlint:unchecked' << '-Xlint:deprecation'
     options.debug = true
@@ -99,6 +119,11 @@ compilePerfJava {
     classpath += sourceSets.main.runtimeClasspath
 }
 
+<<<<<<< HEAD
+=======
+def perfTests = [Test: '**/*', Throughput: '**/*ThroughputTest.class', ThroughputMultiThreaded: '**/Three*ThroughputTest.class', Latency: '**/*LatencyTest.class']
+
+>>>>>>> 03153e3ada0489eef16cb6f59c1668d7ff0b5b2f
 def createPerfTest = { type, pattern ->
     task("perf$type", type: Test, dependsOn: ['classes', 'perfClasses'], group: 'Performance test') {
         outputs.upToDateWhen { false }    // always run perf tests, even if no inputs have changed
@@ -109,7 +134,19 @@ def createPerfTest = { type, pattern ->
     }
 }
 
+<<<<<<< HEAD
 */
+=======
+perfTests.each(createPerfTest)
+
+tasks.addRule('Pattern: perfTestSingle<ClassName>') { taskName ->
+    if (taskName.startsWith('perfTestSingle')) {
+        def type = taskName - 'perf'
+        def pattern = "**/${taskName - 'perfTestSingle'}.class"
+        createPerfTest(type, pattern)
+    }
+}
+>>>>>>> 03153e3ada0489eef16cb6f59c1668d7ff0b5b2f
 
 javadoc {
     title = '<h1>Disruptor</h1>'
@@ -192,6 +229,24 @@ uploadArchives {
     }
 }
 
+<<<<<<< HEAD
+=======
+build.dependsOn perfClasses
+
+task listJars << {
+    configurations.perfCompile.each { file -> println file.name }
+}
+
+task tempLibs(type: Sync) {
+    from configurations.perfCompile
+    into('templib')
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
+}
+
+>>>>>>> 03153e3ada0489eef16cb6f59c1668d7ff0b5b2f
 class Version {
     int major, minor = 0, revision = 0
     boolean snapshot
